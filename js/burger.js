@@ -8,7 +8,7 @@ function show() {
   console.log('show')
   let btnBurger = burg[0].getElementsByTagName("button");  // search button in "burger"
   if (btnBurger.length==0)
-    {   burg[0].innerHTML=`<button class="modal-close close-button">X</button>`;
+    {   burg[0].innerHTML=`<button class="close-burger-button">X</button>`;
 console.log(burg[0].innerHTML);
         let menu = document.getElementsByClassName("nav-menu");
         menu[0].classList.add("visible");
