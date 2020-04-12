@@ -36,3 +36,15 @@
     background-color: blue;
   }  
 }
+
+@media screen and (max-width: 400px) {
+  .make-grid-mini(@i:1) when (@i =< @grid-size) {
+    .@{column}-@{i}{
+      grid-column-end: span 12;
+      min-height: 40px;
+      background-color: indianred;
+    }
+    .make-grid-mini(@i + 1);
+  }
+  .make-grid-mini();
+}
