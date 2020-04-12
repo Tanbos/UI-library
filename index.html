@@ -4,11 +4,39 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://fonts.googleapis.com/css?family=Acme&display=swap" rel="stylesheet">
-  <link rel="stylesheet/less" type="text/css" href="style.less"/>
+  <link rel="stylesheet/less" type="text/css" href="style/style.less"/>
   <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/3.9.0/less.min.js"></script>
   <title>Grid and buttons</title>
 </head>
 <body>
+
+<h1>Modal windows</h1>
+
+<button class="modal-trigger" data-target="send">Отправить1</button>
+<button class="modal-trigger" data-target="send2">Отправить2</button>
+
+<div class="modal" id="send">
+
+  <h3>Window 1</h3>
+  <div class="text">
+    111111 1111 11111 1111  111111111111 1111 11111 1111  111111111111 1111 11111 1111  111111111111 1111 11111 1111  111111111111 1111 11111 1111  111111111111 1111 11111 1111  111111111111 1111 11111 1111  111111
+  </div>
+  <button class="modal-close">Ok</button>
+  <div class="text">
+    111111 1111 11111 1111  111111111111 1111 11111 1111  111111111111 1111 11111 1111  111111111111 1111 11111 1111  111111111111 1111 11111 1111  111111111111 1111 11111 1111  111111111111 1111 11111 1111  111111
+  </div>
+  <button class="modal-close">Понятно</button>
+</div>
+<div class="modal" id="send2">
+  <!--   <button class="modal-close close-button">X</button> -->
+  <h3>Window 2</h3>
+  <div class="text">
+    22 2222 222222 2222222 2222 222 2222 2222 222
+  </div>
+  <button class="modal-close">Понятно</button>
+</div>
+
+
 <div class="row">
   <div class="column column-1">1</div>
   <div class="column column-1">1</div>
@@ -116,5 +144,8 @@
 <div class="btn2">div btn2</div>
 <br>
 <input class="btn3" value="input btn3"><br>
+
+
+<script src="js/modal.js"></script>
 </body>
 </html>
