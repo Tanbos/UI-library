@@ -1,0 +1,41 @@
+#carousel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  left: 0;
+}
+
+#carousel_photo {
+  width: 1300px;
+}
+
+#carousel1 {
+  left: 0;
+  width: 320px;
+  overflow: hidden;
+}
+
+.btnSlide {
+  text-align: center;
+  height: 50px;
+  visibility: visible;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.hidden {
+  visibility: hidden;
+}
+
+#btn_prev {
+  position: relative; //for shift on image
+  left: 15px;
+  z-index: 2;
+}
+
+#btn_next {
+  position: relative;
+  right: 15px;
+  z-index: 2;
+}
+
