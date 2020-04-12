@@ -1,10 +1,11 @@
-"use strict"
+"use strict";
 
 const config1 = ["https://loremflickr.com/320/240?random=1", "https://loremflickr.com/320/240?random=2", "https://loremflickr.com/320/240?random=3", "https://loremflickr.com/320/240?random=4"];
 Carousel("carousel1", config1);
 
 function Carousel(id_carousel, array_config) {
   const widthImg=320;  //size image ( width)
+
   let n; // number of images
   n = document.getElementById("carousel_photo").children.length;
 
@@ -12,6 +13,7 @@ function Carousel(id_carousel, array_config) {
   let shift;
 
   showSlide();
+
   document.getElementById("btn_prev").onclick = changeSlidePrev;
   document.getElementById("btn_next").onclick = changeSlideNext;
 
@@ -44,6 +46,4 @@ function Carousel(id_carousel, array_config) {
     controlLimitImg();
     document.getElementById("carousel_photo").style.marginLeft = shift + 'px';
   }
-
-
 }
