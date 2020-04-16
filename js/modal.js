@@ -9,7 +9,6 @@ for (let i = 0; i < window_modal.length; i++) {
 let zInd = document.body.childElementCount; //number all elements for z-index modal window
 
 let x = document.getElementsByClassName("modal-trigger");
-
 for (let i = 0; i < x.length; i++) {
   const button = x[i];
   const dataTarget = x[i].dataset.target;
@@ -19,14 +18,21 @@ for (let i = 0; i < x.length; i++) {
     modalWindow.style.zIndex = zInd + 1 + "";
     zInd++;
     modalWindow.classList.remove("hidden");
+    document.body.classList.add("background-dark");
   };
 }
+
 
 /* all button "modal close" must close (hidden) modal window */
 let btn_close = document.getElementsByClassName("modal-close");
 for (let i = 0; i < btn_close.length; i++) {
-  btn_close[i].onclick = (e) => e.target.parentElement.classList.add("hidden");
+  btn_close[i].onclick = (e) => {e.target.parentElement.classList.add("hidden");
+   document.body.classList.remove("background-dark");
+  }
 }
+
+
+  
 
 
 
