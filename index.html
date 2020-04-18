@@ -11,17 +11,15 @@
 </head>
 <body>
 <h1>Modal windows</h1>
-<div id="modal-bg-dark"></div>
 <button class="modal-trigger" data-target="send">Отправить1</button>
 <button class="modal-trigger" data-target="send2">Отправить2</button>
-
 <div class="modal" id="send">
   <h3>Window 1</h3>
   <div class="text">
     111111 1111 11111 1111 111111111111 1111 11111 1111 111111111111 1111 11111 1111 111111111111 1111 11111 1111
     111111111111 1111 11111 1111 111111111111 1111 11111 1111 111111111111 1111 11111 1111 111111
   </div>
-  <button class="modal-trigger" data-target="send2">Отправить2</button>
+  <button class="modal-trigger" data-target="send2">Отправить2 (add new modal window)</button>
   <div class="text">
     ttttttttttttttt ttttttttttttttttttt tttttttttttttttttttttt ttttttttttttttttttttttttt ttttttttttttt
   </div>
@@ -43,7 +41,9 @@
 <h1>Burger menu</h1>
 <nav class="dark">
   <div class="logo"><img src="images/logo.png" alt="logo" id="logo"></div>
-  <div class="burger"><button><i class="fas fa-bars fa-w-14 fa-2x"></i></button></div>
+  <div class="burger">
+    <button><i class="fas fa-bars fa-w-14 fa-2x"></i></button>
+  </div>
   <ul class="nav-menu">
     <li><a href="link1">Пункт 1</a></li>
     <li><a href="link2">Пункт 2</a></li>
@@ -163,7 +163,7 @@
 <br>
 <div class="btn2">div btn2</div>
 <br>
-<input class="btn3" value="input btn3"><br>
+<input type="text" class="btn3" value="input btn3"><br>
 <script src="js/carousel.js"></script>
 <script>
   const config1 = ["https://loremflickr.com/320/240?random=1", "https://loremflickr.com/320/240?random=2", "https://loremflickr.com/320/240?random=3", "https://loremflickr.com/320/240?random=4"];
