@@ -2,7 +2,7 @@
 
 function Carousel(id_carousel, arrayImages) {
   let n = arrayImages.length; // n - number of images
-  let widthImage; // widthImage - width image from arrayImages
+  let widthImage; // widthImage - width of image from arrayImages
 
   let img = new Image();
   img.src = arrayImages[0];
@@ -11,63 +11,74 @@ function Carousel(id_carousel, arrayImages) {
 
     let carousel = document.getElementById(id_carousel);
     carousel.setAttribute("class", "carousel");
+    carousel.style.width = widthImage + "px";
+
     let carouselSlider = document.createElement("div");
-    carouselSlider.setAttribute("id", "carouselSlider");
+    carouselSlider.setAttribute("class", "carouselSlider");
     carouselSlider.style.width = widthImage + "px";
     carousel.appendChild(carouselSlider);
+
     let carouselPhotos = document.createElement("div");
-    carouselPhotos.setAttribute("id", "carouselPhoto");
+    carouselPhotos.setAttribute("class", "carouselPhoto");
     carouselPhotos.style.width = widthImage * n + "px";
     carouselSlider.appendChild(carouselPhotos);
 
+    let btnPrev = document.createElement("button");
+    btnPrev.innerHTML = '<i class="fas fa-chevron-left"></i>'; // from fontawesome
+    btnPrev.classList.add("btnSlider");
+    btnPrev.classList.add("btnPrev");
+    carouselSlider.before(btnPrev);
+
+    let btnNext = document.createElement("button");
+    btnNext.innerHTML = '<i class="fas fa-chevron-right"></i>'; // from fontawesome
+    btnNext.classList.add("btnSlider");
+    btnNext.classList.add("btnNext");
+    carouselSlider.after(btnNext);
+
     for (let i = 0; i < n; i++) {
-      let pic = document.createElement("IMG");
+      let pic = document.createElement("img");
       pic.src = arrayImages[i];
       carouselPhotos.appendChild(pic);
     }
 
-    addButtonsFlipping();
-
-    let count = 0; // counter for shift
-    let shift;
+    let count = 0; // counter for images
+    let shift = 0; // shift block with images
     showSlide();
-    document.getElementById("btnPrev").onclick = changeSlidePrev;
-    document.getElementById("btnNext").onclick = changeSlideNext;
 
-    function changeSlidePrev(event) {
-      count++;
+    btnPrev.onclick = function () {
+      changeNumberImg(-1);
+    };
+
+    btnNext.onclick = function () {
+      changeNumberImg(+1);
+    };
+
+    /* change counter for shift block with images (value: from 0 to n)*/
+    function changeNumberImg(value) {
+      count = count + value;
       showSlide();
     }
 
-    function changeSlideNext(event) {
-      count--;
-      showSlide();
-    }
-
+    /* when the first or last picture is displayed - hides the corresponding buttons */
     function controlLimitImg() {
       switch (+count) {
         case 0:
-          document.getElementById("btnPrev").classList.add("hidden");
+          btnPrev.classList.add("hidden");
           break;
-        case 1 - n:
-          document.getElementById("btnNext").classList.add("hidden");
+        case n - 1:
+          btnNext.classList.add("hidden");
           break;
         default:
-          document.getElementById("btnNext").classList.remove("hidden");
-          document.getElementById("btnPrev").classList.remove("hidden");
+          btnNext.classList.remove("hidden");
+          btnPrev.classList.remove("hidden");
       }
     }
 
+    /* moves the block with images */
     function showSlide() {
-      shift = count * widthImage;
+      shift = -count * widthImage;
       controlLimitImg();
-      document.getElementById("carouselPhoto").style.marginLeft = shift + 'px';
+      carouselPhotos.style.marginLeft = shift + 'px';
     }
-
-    function addButtonsFlipping() {
-      carousel.insertAdjacentHTML("afterbegin", `<button class="btnSlider" id="btnPrev"><i class="fas fa-chevron-left"></i></button>`);
-      carousel.insertAdjacentHTML("beforeend", `<button class="btnSlider" id="btnNext"><i class="fas fa-chevron-right"></i></button>`);
-    }
-
   }
 }
