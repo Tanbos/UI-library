@@ -1,37 +1,37 @@
 
 .carousel {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  left: 0;
+  position: relative;
+  margin: 0 auto;
 }
 
-#carouselSlider {
-  left: 0;
+.carouselSlider {
   overflow: hidden;
+}
+
+.carouselPhoto{
+  transition: all 0.7s; /*slow transform */
 }
 
 .btnSlider {
   text-align: center;
-  height: 50px;
-  visibility: visible;
+  height: 4rem;
   cursor: pointer;
   padding: 5px;
 }
 
 .hidden {
-  visibility: hidden;
+  display: none;
 }
 
-#btnPrev {
-  position: relative; //for shift on image
-  left: 15px;
-  z-index: 2;
+.btnPrev {
+  position: absolute;
+  left: 0;
+  top: 40%;
 }
 
-#btnNext {
-  position: relative;
-  right: 15px;
-  z-index: 2;
+.btnNext {
+  position: absolute;
+  right: 0;
+  top: 40%;
 }
 
