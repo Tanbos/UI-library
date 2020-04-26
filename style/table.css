@@ -1,0 +1,27 @@
+table {
+    border: 1px solid black;
+    background:lemonchiffon;
+    border-collapse: collapse; /* объединяем границы ячеек в одну */
+}
+td {
+    border: 1px solid;
+    height: 1.5rem;
+}
+
+thead th{
+    border: 3px solid dodgerblue;
+    color:black;
+    background:lightblue;
+    height: 2rem;
+}
+
+.align-right {
+    text-align: right;
+}
+input {
+    border: 3px solid orange;
+    background:lemonchiffon;
+}
+input[type="text"]::-webkit-input-placeholder {   /* for Chrome */
+    color: #ffd595; /* Цвет подсказывающего текста ("Search") для окошка input */
+}
