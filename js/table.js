@@ -10,8 +10,9 @@ const configTable = {
     // fields: ['name', 'surname'],
     filters: [
       v => v.toLowerCase(), // это лямбда-функция, не бойтесь :)
-      //v => toKeyboardLayout(v, 'ru'), // функция, которая для каждой английской буквы находит на клавиатуре русский аналог и возвращает "переведённую" строку. полезно, если человек начал печатать, забыв перед этим переключить раскладку
-      //v => toKeyboardLayout(v, 'en') // то же самое, но ищет английские соответствия для русских букв
+      v => toKeyboardLayoutRu(v), //функция, которая для каждой английской буквы находит на клавиатуре русский аналог и возвращает "переведённую" строку. полезно, если человек начал печатать, забыв перед этим переключить раскладку
+      v => toKeyboardLayoutRu(v.toLowerCase()),// предыдущая функция без учета регистра
+      // v => toKeyboardLayout(v, 'en') // то же самое, но ищет английские соответствия для русских букв
     ] // а это был массив функций :))
   }
 };
@@ -118,15 +119,7 @@ function DataTable(config, data) {
 
     function sortArrayText(koef, column) {
       arrayUsers.sort(function (a, b) {
-        let x = a[column].toLowerCase();
-        let y = b[column].toLowerCase();
-        if (x < y) {
-          return -1 * koef;
-        }
-        if (x > y) {
-          return 1 * koef;
-        }
-        return 0;
+        return koef * a[column].localeCompare(b[column]);
       });
     }
     return arrayUsers;
@@ -235,7 +228,18 @@ function DataTable(config, data) {
   }
 }
 
-
+function toKeyboardLayoutRu(str) {
+  let associativeArray = {
+    "q": "й", "w": "ц", "e": "у", "r": "к", "t": "е", "y": "н", "u": "г",
+    "i": "ш", "o": "щ", "p": "з", "[": "х", "]": "ъ", "a": "ф", "s": "ы",
+    "d": "в", "f": "а", "g": "п", "h": "р", "j": "о", "k": "л", "l": "д",
+    ";": "ж", "'": "э", "z": "я", "x": "ч", "c": "с", "v": "м", "b": "и",
+    "n": "т", "m": "ь", ",": "б", ".": "ю", "/": "."
+  };
+  return str.replace(/[A-z/,.;\'\]\[]/g, function (x) {
+    return x == x.toLowerCase() ? associativeArray[x] : associativeArray[x.toLowerCase()].toUpperCase();
+  });
+}
 
 DataTable(configTable, users);
 
