@@ -2,11 +2,13 @@
 
 const configTable = {
   parent: '#usersTable',
-  columns: [{title: '№', value: '_index'},
+  columns: [{title: '№', value: '_index', editable: false},
+    // {title: 'Id', value: 'id', editable: false},
     {title: 'Title', value: 'title', sortable: true},
-    {title: 'Сover', value: 'cover',},
-    {title: 'Age', value: (x) => calculateAge(x.publishDate), type: 'data'},  // age calculate in months
+    //{title: 'Сover', value: 'cover',},
+    {title: 'Age, months', value: (x) => calculateAge(x.publishDate), type: 'data'},  // age calculate in months
     {title: 'Price', value: 'price', type: 'number', sortable: true},
+    {title: 'Actions', value: 'action', editable: false},
   ],
   apiUrl: 'https://5e938231c7393c0016de48e6.mockapi.io/api/ps5/books',
   search: {
@@ -28,7 +30,6 @@ const users = [{id: 30050, name: 'Вася', surname: 'Петров', age: 12},
   {id: 30055, name: 'Mike', surname: 'Gitt', age: 1},];
 
 function DataTable(config, data) {
-
   /* if data undefinite, then the date will be taken through the api request  */
   if (!data) {
     let s = requestApi(config.apiUrl);
@@ -44,11 +45,13 @@ function DataTable(config, data) {
       createFieldSearch();
     }
 
+    createButtonAdd(); // create button "Add" for add new data
+
     let table = createTable();
     let thead = createTableHeader();
     renderTable(data1);    // show start (unsort) table
-    createSortButtons(table);
-
+    createSortButtons(table); // add buttons for sort table
+    initModal();  // add listener for buttons "table-modal-trigger"
 
     /* return current status of class button */
     function currentStatusButton(button) {
@@ -90,7 +93,7 @@ function DataTable(config, data) {
         let text = document.createTextNode(numberUser);  // don't sort
         td.appendChild(text);
         trTbody.appendChild(td);
-        for (let j = 1; j < config.columns.length; j++) {
+        for (let j = 1; j < config.columns.length - 1; j++) {
           let text;
           let key = config.columns[j].value;
           let td = document.createElement("td");
@@ -105,6 +108,18 @@ function DataTable(config, data) {
           td.appendChild(text);
           trTbody.appendChild(td);
         }
+        td = document.createElement("td");
+        let buttonDelete = createDeleteButton(td, "Delete");
+        buttonDelete.onclick = function () {
+          deleteUser(arrayUsers[i].id).then(() => update(config.apiUrl).then((data) => {
+            removeBodyTable();
+            renderTable(data);
+          }));
+        }
+        let buttonEdit = createDeleteButton(td, "Edit");
+        buttonEdit.setAttribute("data-target", "user" + arrayUsers[i].id);
+        buttonEdit.classList.add("table-modal-trigger");
+        trTbody.appendChild(td);
         tbody.appendChild(trTbody);
       }
     }
@@ -190,6 +205,7 @@ function DataTable(config, data) {
       return resultArchiv;
     }
 
+
     function createTable() {
       let table = document.createElement("table");
       document.querySelector(config.parent).appendChild(table);
@@ -245,6 +261,145 @@ function DataTable(config, data) {
       }
     }
 
+    function createButtonAdd() {
+      let buttonAdd = document.createElement("button");
+      buttonAdd.innerText = "Add";
+      buttonAdd.setAttribute("class", "btn2-white");   // from button.less
+      buttonAdd.setAttribute("data-target", "add");
+      buttonAdd.classList.add("table-modal-trigger");
+      document.querySelector(config.parent).appendChild(buttonAdd);
+    }
+
+    function createDeleteButton(td, text) {
+      let button = document.createElement("button");
+      button.innerText = text;
+      text == "Delete" ? button.setAttribute("class", "btn2-danger") : button.setAttribute("class", "btn2-warning");
+      td.appendChild(button);
+      return button;
+    }
+
+    async function deleteUser(userId) {
+      let urlForDelete = configTable.apiUrl + '/' + userId;
+      const response = await fetch(urlForDelete, {
+        method: 'DELETE',
+        body: JSON.stringify(data)
+      });
+      return await response.json();
+    }
+
+
+    function createModalWindow(modalId, indexRow) {
+      let window_modal = document.createElement("div");
+      window_modal.setAttribute("class", "table-modal");
+      window_modal.setAttribute("id", modalId);
+      document.querySelectorAll(".table-modal-trigger[data-target=" + modalId + "]")[0].after(window_modal);
+      for (let i = 0; i < config.columns.length; i++) {
+        let div = document.createElement("div");
+        if (config.columns[i].editable === undefined || config.columns[i].editable) {
+          let text = document.createTextNode(config.columns[i].title);
+          let inputEntry = document.createElement("input");
+          if (config.columns[i].type === "data") {
+            inputEntry.placeholder = "2019-04-18T00:05:14.630Z"; // подсказка, что вводить
+          }
+          if (modalId != "add") {
+            inputEntry.value = data1[indexRow][config.columns[i].value];
+          }
+          inputEntry.type = "text";
+          inputEntry.id = config.columns[i].value;
+          div.appendChild(text);
+          window_modal.appendChild(div);
+          window_modal.appendChild(inputEntry);
+        }
+      }
+
+      let buttonSave = document.createElement("button");
+      buttonSave.innerText = "Save";
+      buttonSave.setAttribute("class", "btn2-white");   // from button.less
+      buttonSave.setAttribute("data-target", "save");
+      window_modal.appendChild(buttonSave);
+
+      buttonSave.onclick = function () {
+        let dataId;
+        if (modalId != "add") {
+          dataId = data1[indexRow].id;
+        }
+        saveData(modalId, dataId).then(() => update(config.apiUrl).then((data) => {
+          removeBodyTable();
+          renderTable(data);
+        }));
+
+      };
+
+      return window_modal;
+    }
+
+
+    /* for table modal */
+    function initModal() {
+      /* all buttons "modal close" must close (hidden) modal window */
+      let x = document.getElementsByClassName("table-modal-trigger");
+      for (let i = 0; i < x.length; i++) {
+        const button = x[i];
+        const dataTarget = x[i].dataset.target;
+        button.onclick = () => {
+          window_modal = createModalWindow(dataTarget, i - 1);  // i = indexRow  (1 for add)
+          /* add button X for close modal window */
+          window_modal.insertAdjacentHTML("afterbegin", `<button class="modal-close close-button">X</button>`);
+
+          /* add blackout background for modal window */
+          let modalBackground = document.createElement("div");
+          modalBackground.classList.add("modal-bg-dark");
+          window_modal.before(modalBackground);
+
+          let btn_close = document.getElementsByClassName("modal-close");
+          for (let i = 0; i < btn_close.length; i++) {
+            btn_close[i].onclick = (e) => {
+              window_modal.previousSibling.remove();
+              window_modal.remove();
+            }
+          }
+        }
+      }
+    }
+
+  }
+
+
+  async function saveData(func, userId) {
+    let dataNew = {};
+    for (let i = 0; i < config.columns.length; i++) {
+      if (config.columns[i].editable === undefined || config.columns[i].editable) {
+        if (config.columns[i].type === "data") {
+          dataNew["publishDate"] = document.getElementById(config.columns[i].value).value;
+        } else {
+          dataNew[config.columns[i].value] = document.getElementById(config.columns[i].value).value;
+        }
+      }
+    }
+    let metodRequest;
+    let url;
+    if (func == "add") {
+      metodRequest = 'POST';
+      url = config.apiUrl;
+    } else {
+      metodRequest = 'PUT';
+      url = config.apiUrl + "/" + userId;
+    }
+
+    try {     // from https://developer.mozilla.org/ru/docs/Web/API/Fetch_API/Using_Fetch
+      const response = await fetch(url, {
+        method: metodRequest,
+        body: JSON.stringify(dataNew),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      const json = await response.json();
+      alert("Was saved");
+    } catch (error) {
+      console.error('Ошибка:', error);
+    }
+
   }
 
 
@@ -257,7 +412,18 @@ function DataTable(config, data) {
         DataTable(configTable, data);
       })
   }
+
+
+  async function update(url) {
+    const response = await fetch(url, {
+      method: 'GET',
+    });
+    return await response.json();
+  }
+
+
 }
+
 
 function toKeyboardLayoutRuEn(str) {
   let associativeArray = {
@@ -272,6 +438,7 @@ function toKeyboardLayoutRuEn(str) {
   });
 }
 
+
 function calculateAge(timeX) {
   let today = new Date();
   let dataPublish = new Date(timeX);
@@ -279,6 +446,7 @@ function calculateAge(timeX) {
   let age = Math.round((today - dataPublish) / (30 * 24 * 60 * 60 * 1000));  // for months
   return age;
 }
+
 
 DataTable(configTable);
 
