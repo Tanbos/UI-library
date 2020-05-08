@@ -38,20 +38,24 @@ function DataTable(config, data) {
     /* statusArray for change sort buttons (buttons from src="https://kit.fontawesome.com/14fb9e47fb.js") */
     const statusArray = [{"unsort": "fas fa-sort", "sortUp": "fas fa-sort-up", "sortDown": "fas fa-sort-down"},
       {"fas fa-sort": "unsort", "fas fa-sort-up": "sortUp", "fas fa-sort-down": "sortDown"}];
-
+let dataUpdate = data.slice();
     let data1 = data.slice();
     let status = "unsort";
+    let searchKey="";
+    let columnSort = config.columns[0];
     if (config.search) {
       createFieldSearch();
     }
 
-    createButtonAdd(); // create button "Add" for add new data
+    let buttonAdd = createButton(document.querySelector(config.parent),"Add","btn2-white table-modal-trigger"); // create button "Add" for add new data
+    buttonAdd.setAttribute("data-target", "add");
+
 
     let table = createTable();
     let thead = createTableHeader();
     renderTable(data1);    // show start (unsort) table
     createSortButtons(table); // add buttons for sort table
-    initModal();  // add listener for buttons "table-modal-trigger"
+  //  initListenerModal();  // add listener for buttons "table-modal-trigger"
 
     /* return current status of class button */
     function currentStatusButton(button) {
@@ -83,7 +87,8 @@ function DataTable(config, data) {
 
     /* render and show body of table */
     function renderTable(arrayUsers) {
-      var tbody = document.createElement("tbody");
+
+      let tbody = document.createElement("tbody");
       table.appendChild(tbody);
       let numberUser = 0;
       for (let i = 0; i < arrayUsers.length; i++) {
@@ -97,7 +102,7 @@ function DataTable(config, data) {
           let text;
           let key = config.columns[j].value;
           let td = document.createElement("td");
-          if (config.columns[j].type === "data") { // for calculate age from format Data
+          if (typeof config.columns[j].value === "function") { // for calculate age from format Data
             text = document.createTextNode(config.columns[j].value(arrayUsers[i]));
           } else {
             text = document.createTextNode(arrayUsers[i][key]);
@@ -109,19 +114,20 @@ function DataTable(config, data) {
           trTbody.appendChild(td);
         }
         td = document.createElement("td");
-        let buttonDelete = createDeleteButton(td, "Delete");
+        let buttonDelete = createButton(td, "Delete", "btn2-danger");
         buttonDelete.onclick = function () {
           deleteUser(arrayUsers[i].id).then(() => update(config.apiUrl).then((data) => {
             removeBodyTable();
             renderTable(data);
+            dataUpdate=data.slice();
           }));
         }
-        let buttonEdit = createDeleteButton(td, "Edit");
+        let buttonEdit = createButton(td, "Edit", "btn2-warning table-modal-trigger");
         buttonEdit.setAttribute("data-target", "user" + arrayUsers[i].id);
-        buttonEdit.classList.add("table-modal-trigger");
         trTbody.appendChild(td);
         tbody.appendChild(trTbody);
       }
+      initListenerModal(); // add listener for buttons "table-modal-trigger"
     }
 
     function removeBodyTable() {
@@ -158,15 +164,16 @@ function DataTable(config, data) {
     }
 
     function addSearch(event) {
-      let searchKey = event.target.value;
+      searchKey = event.target.value;
       if (searchKey === "") {
-        data1 = data.slice();
+        data1 = dataUpdate.slice();
       } else {
-        data1 = searchForKey(data.slice(), searchKey);
+        data1 = searchForKey(dataUpdate.slice(), searchKey);
       }
       removeBodyTable();
       restartButtonsStatus();
       renderTable(data1);
+      //return searchKey;
     }
 
     function searchForKey(array, key) {
@@ -193,7 +200,6 @@ function DataTable(config, data) {
                 if ((searchValues[j] == key) ||
                   (isNaN(searchValues[j]) &&
                     (config.search.filters[k](searchValues[j]).includes(config.search.filters[k](key))))) {
-                  console.log(config.search.filters[k](key));
                   resultArchiv.push(array[i]);
                   continue continue1;
                 }
@@ -253,6 +259,7 @@ function DataTable(config, data) {
             restartButtonsStatus();
             changeButtonStatus(button, statusArray[0][newStatus]);
             status = newStatus;
+            columnSort = config.columns[j];
             let newArray = sortArray(data1.slice(0), status, config.columns[j]);
             removeBodyTable();
             renderTable(newArray);
@@ -261,20 +268,12 @@ function DataTable(config, data) {
       }
     }
 
-    function createButtonAdd() {
-      let buttonAdd = document.createElement("button");
-      buttonAdd.innerText = "Add";
-      buttonAdd.setAttribute("class", "btn2-white");   // from button.less
-      buttonAdd.setAttribute("data-target", "add");
-      buttonAdd.classList.add("table-modal-trigger");
-      document.querySelector(config.parent).appendChild(buttonAdd);
-    }
 
-    function createDeleteButton(td, text) {
+    function createButton(parent, text, atributeClass) {
       let button = document.createElement("button");
       button.innerText = text;
-      text == "Delete" ? button.setAttribute("class", "btn2-danger") : button.setAttribute("class", "btn2-warning");
-      td.appendChild(button);
+      button.setAttribute("class", atributeClass);
+      parent.appendChild(button);
       return button;
     }
 
@@ -292,17 +291,17 @@ function DataTable(config, data) {
       let window_modal = document.createElement("div");
       window_modal.setAttribute("class", "table-modal");
       window_modal.setAttribute("id", modalId);
-      document.querySelectorAll(".table-modal-trigger[data-target=" + modalId + "]")[0].after(window_modal);
+      document.querySelector(".table-modal-trigger[data-target=" + modalId + "]").after(window_modal);
       for (let i = 0; i < config.columns.length; i++) {
         let div = document.createElement("div");
-        if (config.columns[i].editable === undefined || config.columns[i].editable) {
+        if (config.columns[i].editable!==false) {
           let text = document.createTextNode(config.columns[i].title);
           let inputEntry = document.createElement("input");
           if (config.columns[i].type === "data") {
             inputEntry.placeholder = "2019-04-18T00:05:14.630Z"; // подсказка, что вводить
           }
           if (modalId != "add") {
-            inputEntry.value = data1[indexRow][config.columns[i].value];
+            inputEntry.value = data1[indexRow][config.columns[i].value];  // if Edit, then show value
           }
           inputEntry.type = "text";
           inputEntry.id = config.columns[i].value;
@@ -312,20 +311,24 @@ function DataTable(config, data) {
         }
       }
 
-      let buttonSave = document.createElement("button");
-      buttonSave.innerText = "Save";
-      buttonSave.setAttribute("class", "btn2-white");   // from button.less
-      buttonSave.setAttribute("data-target", "save");
-      window_modal.appendChild(buttonSave);
+      let buttonSave = createButton(window_modal,"Save","btn-word");
 
       buttonSave.onclick = function () {
-        let dataId;
+        let url=config.apiUrl;
+        let metodRequest = 'POST';
         if (modalId != "add") {
-          dataId = data1[indexRow].id;
+          url= config.apiUrl + "/" + data1[indexRow].id;
+          metodRequest = 'PUT';
         }
-        saveData(modalId, dataId).then(() => update(config.apiUrl).then((data) => {
+        saveData(metodRequest, url).then(() => update(config.apiUrl).then((data) => {
+          dataUpdate=data.slice();
+          let dataUpdateKey=data.slice();
+          if (searchKey!="") {dataUpdateKey = searchForKey(dataUpdateKey,searchKey)};
+          let dataUpdateSort=dataUpdateKey;
+          if (status!="unsort"){
+            dataUpdateSort=sortArray(dataUpdateKey.slice(),status,columnSort)};
           removeBodyTable();
-          renderTable(data);
+          renderTable(dataUpdateSort);
         }));
 
       };
@@ -335,7 +338,7 @@ function DataTable(config, data) {
 
 
     /* for table modal */
-    function initModal() {
+    function initListenerModal() {
       /* all buttons "modal close" must close (hidden) modal window */
       let x = document.getElementsByClassName("table-modal-trigger");
       for (let i = 0; i < x.length; i++) {
@@ -345,7 +348,6 @@ function DataTable(config, data) {
           window_modal = createModalWindow(dataTarget, i - 1);  // i = indexRow  (1 for add)
           /* add button X for close modal window */
           window_modal.insertAdjacentHTML("afterbegin", `<button class="modal-close close-button">X</button>`);
-
           /* add blackout background for modal window */
           let modalBackground = document.createElement("div");
           modalBackground.classList.add("modal-bg-dark");
@@ -365,25 +367,16 @@ function DataTable(config, data) {
   }
 
 
-  async function saveData(func, userId) {
+  async function saveData(metodRequest, url) {
     let dataNew = {};
     for (let i = 0; i < config.columns.length; i++) {
-      if (config.columns[i].editable === undefined || config.columns[i].editable) {
+      if (config.columns[i].editable!==false) {
         if (config.columns[i].type === "data") {
-          dataNew["publishDate"] = document.getElementById(config.columns[i].value).value;
+          dataNew["publishDate"] = document.getElementById(config.columns[i].value).value;  // publishDate in data urlApi
         } else {
           dataNew[config.columns[i].value] = document.getElementById(config.columns[i].value).value;
         }
       }
-    }
-    let metodRequest;
-    let url;
-    if (func == "add") {
-      metodRequest = 'POST';
-      url = config.apiUrl;
-    } else {
-      metodRequest = 'PUT';
-      url = config.apiUrl + "/" + userId;
     }
 
     try {     // from https://developer.mozilla.org/ru/docs/Web/API/Fetch_API/Using_Fetch
