@@ -4,12 +4,27 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://fonts.googleapis.com/css?family=Acme&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   <script src="https://kit.fontawesome.com/a92211bf3b.js" crossorigin="anonymous"></script>
   <link rel="stylesheet/less" type="text/css" href="style/style.less"/>
   <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/3.9.0/less.min.js"></script>
-  <title>PS2 and PS3, PS4</title>
+  <title>PS2, PS3, PS4, PS5, PS6</title>
 </head>
 <body>
+<h1>Input</h1>
+<div id="app">
+  <my-input
+          v-for="q in questions"
+          :key="q.title"
+          :type="q.type"
+          :title="q.title"
+          :placeholder="q.placeholder"
+          :required="q.required"
+          :pattern="q.pattern"
+          :errormessage="q.errormessage"
+          v-model="answers[q.name]"
+  />
+</div>
 <h1>Table</h1>
 <div id="usersTable"></div>
 <h1>Carousel</h1>
@@ -168,6 +183,34 @@
 <div class="btn2">div btn2</div>
 <br>
 <input type="text" class="btn3" value="input btn3"><br>
+<script src="js/my-input.js"></script>
+<script>
+  var app = new Vue({
+    el: '#app',
+    data() {
+      return {
+        questions: [
+          {title: "Как тебя зовут?", placeholder: "Иван", name: "name"},
+          {title: "Сколько тебе лет?", placeholder: "15", type: "number", name: "age"},
+          {
+            title: "Твой email", placeholder: "ivan@example.com", required: true,
+            pattern: '^\\w+@(\\w+\\.)+\\w+$', errormessage: "E-mail uncorrect. Format: x@y.z", name: "email"
+          },
+          {
+            title: "Твой телефон", placeholder: "+3804444444",
+            pattern: '\\+380\\d{7}', errormessage: "Введите номер в формате +380ХХХХХХХ", name: "phone"
+          }
+        ],
+        answers: {
+          "name": "",
+          "age": "",
+          "email": "",
+          "phone": ""
+        }
+      }
+    }
+  })
+</script>
 <script src="js/carousel.js"></script>
 <script>
   const config1 = ["https://loremflickr.com/420/240?random=1", "https://loremflickr.com/420/240?random=2",
@@ -176,6 +219,6 @@
 </script>
 <script src="js/modal.js"></script>
 <script src="js/burger.js"></script>
-<script src="js/table.js"> </script>
+<script src="js/table.js"></script>
 </body>
 </html>
