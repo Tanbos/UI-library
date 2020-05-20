@@ -47,22 +47,21 @@ Vue.component('my-input', {
       this.$emit('input', value);
       if (this["required"] && (value === "")) {
         this.isValidate = false;
+        alert("This is a required field");
       } else {
         this.isValidate = true;
-        if (value != "" && this["pattern"] && !value.match(this["pattern"])) {
+        if (value != "" && !value.match(this["pattern"])) {
           alert(this["errormessage"]);
           this.isValidate = false;
         }
       }
     },
-
   },
 
   template: `
 
 <div>
 <label>{{ this.title }} <span v-if="this.required">*</span>
-<br>
 <input 
 :type="this.type"  
 :placeholder="this.placeholder"  
@@ -72,7 +71,6 @@ Vue.component('my-input', {
 :class="{'valid-input':isValidate, 'error-input':!isValidate}"
 >
 </label>
-<p></p>
 </div>
 `
 })
