@@ -6,7 +6,6 @@
               @click="mychangenumber(-1)">
         Prev
       </button>
-      <!--<button v-else>Start</button>-->
     </div>
     <div class="carousel">
       <div class="carouselSlider" style="width: 1680px;" :style="countShift">
@@ -22,7 +21,6 @@
               @click="mychangenumber(1)">
         Next
       </button>
-      <!--    <button v-else>End</button>-->
     </div>
   </div>
 </template>
@@ -93,10 +91,6 @@ export default Vue.extend({
 
   .carouselSlider {
     transition: all 0.7s; /*slow transform */
-  }
-
-  .hidden {
-    visibility: hidden;
   }
 
   .btnCarousel {
