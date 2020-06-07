@@ -1,7 +1,5 @@
 <template>
   <div class="home">
-
-
     <!--    <img alt="Vue logo" src="../assets/logo.png">-->
     <!--    <HelloWorld msg="Welcome to Your Vue.js App"/>-->
     <MyButton size="large" color="danger" :text="text" @click="clickMyButton('text')"></MyButton>
@@ -26,18 +24,20 @@
       <Column :cols="5">5</Column>
     </Row>
 
+    <Carousel :arrayUrl="arrayUrl"></Carousel>
+
   </div>
 </template>
 
 <script>
   // @ is an alias to /src
 
-
   import MyButton from "@/components/MyButton.vue";
   import HelloWorld from '@/components/HelloWorld.vue';
   import Modal from "@/components/Modal.vue";
   import Row from "@/components/grid/Row";
   import Column from "@/components/grid/Column";
+  import Carousel from "@/components/Carousel.vue";
 
   export default {
     name: 'Home',
@@ -46,7 +46,8 @@
       HelloWorld,
       Modal,
       Row,
-      Column
+      Column,
+      Carousel,
     },
     data() {
       return {
@@ -60,6 +61,13 @@
       clickMyButton: function (e) {
         this[e] = "Pressed"
       },
+    },
+
+    data() {
+      return {
+        arrayUrl: ["https://loremflickr.com/420/240?random=1", "https://loremflickr.com/420/240?random=2",
+          "https://loremflickr.com/420/240?random=3", "https://loremflickr.com/420/240?random=4"],
+      }
     }
 
   }
