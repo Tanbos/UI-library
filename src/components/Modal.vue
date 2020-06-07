@@ -21,24 +21,26 @@
 </template>
 
 <script lang="ts">
-export default {
-  name: 'Modal',
-  data() {
-    return {
-      visible: false,
-    };
-  },
-  methods: {
-    show() {
-      this.visible = true;
-      this.$emit('open');
+import Vue from 'vue';
+
+export default Vue.extend({
+    name: 'Modal',
+    data() {
+        return {
+            visible: false,
+        };
     },
-    close() {
-      this.visible = false;
-      this.$emit('close');
+    methods: {
+        show(): void {
+            this.visible = true;
+            this.$emit('open');
+        },
+        close(): void {
+            this.visible = false;
+            this.$emit('close');
+        },
     },
-  },
-};
+});
 </script>
 
 <style lang="less">
@@ -56,14 +58,14 @@ export default {
     width: 20px;
   }
 
-   .footer {
+  .footer {
     margin-bottom: 5px;
     text-align: center;
   }
 
-.right{
-  text-align: right;
-}
+  .right {
+    text-align: right;
+  }
 
   .hidden {
     display: none;
