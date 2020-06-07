@@ -31,15 +31,15 @@
   </div>
 </template>
 
-<script >
+<script>
   // @ is an alias to /src
 
-  import MyButton from "@/components/MyButton.vue";
+  import MyButton from '@/components/MyButton.vue';
   import HelloWorld from '@/components/HelloWorld.vue';
-  import Modal from "@/components/Modal.vue";
-  import Row from "@/components/grid/Row";
-  import Column from "@/components/grid/Column";
-  import Carousel from "@/components/Carousel.vue";
+  import Modal from '@/components/Modal.vue';
+  import Row from '@/components/grid/Row.vue';
+  import Column from '@/components/grid/Column.vue';
+  import Carousel from '@/components/Carousel.vue';
   import DataTable from '@/components/DataTable.vue';
 
   export default {
@@ -51,7 +51,7 @@
       Row,
       Column,
       Carousel,
-        DataTable,
+      DataTable,
     },
 
     methods: {
@@ -62,33 +62,32 @@
 
     data() {
       return {
-          size: "",
-          color: "",
-          text: "Button",
-          text2: "Button2",
+        size: "",
+        color: "",
+        text: "Button",
+        text2: "Button2",
         arrayUrl: ["https://loremflickr.com/420/240?random=1", "https://loremflickr.com/420/240?random=2",
           "https://loremflickr.com/420/240?random=3", "https://loremflickr.com/420/240?random=4"],
-          items: [{id: 30050, name: 'Вася', surname: 'Петров', age: 12},
-              {id: 30051, name: 'Вася', surname: 'Васечкин', age: 15},
-              {id: 30052, name: 'Аня', surname: 'Ааасечкин', age: 1},
-              {id: 30053, name: 'Петр', surname: 'Яяяааасечкин', age: 5}],
-          columns: [{title: '№', value: '_index'},
-              {title: 'Имя', value: 'name'},
-              {title: 'Фамилия', value: 'surname', sortable: true},
-              {title: 'Возраст', value: 'age', type: 'number', sortable: true}],
-          search: {
-              fields: ['title'],
-              filters: [
-                  // если без фильтров поиск абсолютной идентичности искомому слову
-                  // v => v.toLowerCase(), // для сравнения без учета регистра
-                  // v => toKeyboardLayoutRuEn(v.toLowerCase()),
-              ],
-          },
+        items: [{id: 30050, name: 'Вася', surname: 'Петров', age: 12},
+          {id: 30051, name: 'Вася', surname: 'Васечкин', age: 15},
+          {id: 30052, name: 'Аня', surname: 'Ааасечкин', age: 1},
+          {id: 30053, name: 'Петр', surname: 'Яяяааасечкин', age: 5}],
+        columns: [{title: '№', value: '_index'},
+          {title: 'Имя', value: 'name'},
+          {title: 'Фамилия', value: 'surname', sortable: true},
+          {title: 'Возраст', value: 'age', type: 'number', sortable: true}],
+        search: {
+          fields: ['title'],
+          filters: [
+            // если без фильтров поиск абсолютной идентичности искомому слову
+            // v => v.toLowerCase(), // для сравнения без учета регистра
+            // v => toKeyboardLayoutRuEn(v.toLowerCase()),
+          ],
+        },
       }
     }
 
   }
-
 
 
 </script>
