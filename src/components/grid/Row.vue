@@ -6,14 +6,8 @@
 
 </template>
 
-<script>
-  export default {
-    name: "Row"
-  }
-</script>
 
-
-<style lang="less">
+<style>
   .row {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
