@@ -3,18 +3,17 @@
     <!--    <img alt="Vue logo" src="../assets/logo.png">-->
     <!--    <HelloWorld msg="Welcome to Your Vue.js App"/>-->
     <h1>MyButton</h1>
-    <MyButton size="large" color="danger" :text="text" @click="clickMyButton('text')"></MyButton>
-    <MyButton size="small" color="warning" :text="text2" @click="clickMyButton('text2')"></MyButton>
-    <MyButton color="success" text="Button" @click="clickMyButton"></MyButton>
+
+    <MyButton color="success" text="Button" @click></MyButton>
     <h1>Modal</h1>
     <Modal @open @close>
       <template v-slot:trigger>
         <button class="modal-trigger" data-target="name">Test for modal window</button>
       </template>
       <template v-slot:default>
-        <div class="modal" id="name">text text in window
-          <div> Параграф для основного контента окна.</div>
-          <div> Параграф для основного контента окна.</div>
+        <div class="modal" id="name">
+          <div> text in window text in window</div>
+          <div> text in window text in window</div>
         </div>
       </template>
     </Modal>
@@ -31,84 +30,58 @@
   </div>
 </template>
 
-<script>
-  // @ is an alias to /src
+<script lang="ts">
+// @ is an alias to /src
+import Vue from 'vue';
+import MyButton from '@/components/MyButton.vue';
+import HelloWorld from '@/components/HelloWorld.vue';
+import Modal from '@/components/Modal.vue';
+import Row from '@/components/grid/Row.vue';
+import Column from '@/components/grid/Column.vue';
+import Carousel from '@/components/Carousel.vue';
+import DataTable from '@/components/DataTable.vue';
 
-  import MyButton from '@/components/MyButton.vue';
-  import HelloWorld from '@/components/HelloWorld.vue';
-  import Modal from '@/components/Modal.vue';
-  import Row from '@/components/grid/Row.vue';
-  import Column from '@/components/grid/Column.vue';
-  import Carousel from '@/components/Carousel.vue';
-  import DataTable from '@/components/DataTable.vue';
 
-  export default {
+export default Vue.extend({
     name: 'Home',
     components: {
-      MyButton,
-      HelloWorld,
-      Modal,
-      Row,
-      Column,
-      Carousel,
-      DataTable,
-    },
-
-    methods: {
-      clickMyButton: function (e) {
-        this[e] = "Pressed"
-      },
+        MyButton,
+        HelloWorld,
+        Modal,
+        Row,
+        Column,
+        Carousel,
+        DataTable,
     },
 
     data() {
-      return {
-        size: "",
-        color: "",
-        text: "Button",
-        text2: "Button2",
-        arrayUrl: ["https://loremflickr.com/420/240?random=1", "https://loremflickr.com/420/240?random=2",
-          "https://loremflickr.com/420/240?random=3", "https://loremflickr.com/420/240?random=4"],
-        items: [{id: 30050, name: 'Вася', surname: 'Петров', age: 12},
-          {id: 30051, name: 'Вася', surname: 'Васечкин', age: 15},
-          {id: 30052, name: 'Аня', surname: 'Ааасечкин', age: 1},
-          {id: 30053, name: 'Петр', surname: 'Яяяааасечкин', age: 5}],
-        columns: [{title: '№', value: '_index'},
-          {title: 'Имя', value: 'name'},
-          {title: 'Фамилия', value: 'surname', sortable: true},
-          {title: 'Возраст', value: 'age', type: 'number', sortable: true}],
-        search: {
-          fields: ['name', 'surname'],
-          filters: [
-            // если без фильтров поиск абсолютной идентичности искомому слову
-            v => v.toLowerCase(), // для сравнения без учета регистра
-            v => toKeyboardLayoutRuEn(v.toLowerCase()),
-          ],
-          // for <script lang="ts">
-          // filters: [
-          //   (v: string ) => v.toLowerCase(), // для сравнения без учета регистра
-          //   (v: string) => toKeyboardLayoutRuEn(v.toLowerCase()),
-          // ],
-        },
-      }
-    }
+        return {
+            size: '',
+            color: '',
+            arrayUrl: ['https://loremflickr.com/420/240?random=1', 'https://loremflickr.com/420/240?random=2',
+                'https://loremflickr.com/420/240?random=3', 'https://loremflickr.com/420/240?random=4'],
+            items: [{id: 30050, name: 'Вася', surname: 'Петров', age: 12},
+                {id: 30051, name: 'Вася', surname: 'Васечкин', age: 15},
+                {id: 30052, name: 'Аня', surname: 'Ааасечкин', age: 1},
+                {id: 30053, name: 'Петр', surname: 'Яяяааасечкин', age: 5}],
+            columns: [{title: '№', value: '_index'},
+                {title: 'Имя', value: 'name'},
+                {title: 'Фамилия', value: 'surname', sortable: true},
+                {title: 'Возраст', value: 'age', type: 'number', sortable: true}],
+            search: {
+                fields: ['name', 'surname'],
+                filters: [
+                    (v: string): string => v.toLowerCase(), // для сравнения без учета регистра
+                    // (v: string) => toKeyboardLayoutRuEn(v.toLowerCase()),
+                ],
+            },
+        };
+    },
 
-  }
+});
 
-  function toKeyboardLayoutRuEn(str) {
-    let associativeArray = {
-      "q": "й", "w": "ц", "e": "у", "r": "к", "t": "е", "y": "н", "u": "г",
-      "i": "ш", "o": "щ", "p": "з", "[": "х", "]": "ъ", "a": "ф", "s": "ы",
-      "d": "в", "f": "а", "g": "п", "h": "р", "j": "о", "k": "л", "l": "д",
-      ";": "ж", "'": "э", "z": "я", "x": "ч", "c": "с", "v": "м", "b": "и",
-      "n": "т", "m": "ь", ",": "б", ".": "ю", "/": "."
-    };
-    return str.replace(/[A-z/,.;\'\]\[]/g, function (x) {
-      return x == x.toLowerCase() ? associativeArray[x] : associativeArray[x.toLowerCase()].toUpperCase();
-    });
-  }
-
-  // function toKeyboardLayoutRuEn(str: any) {
-//     let associativeArray: any;
+// function toKeyboardLayoutRuEn(str: string) {
+//     let associativeArray: { [symb: string]: string };
 //     associativeArray = {
 //         'q': 'й', 'w': 'ц', 'e': 'у', 'r': 'к', 't': 'е', 'y': 'н', 'u': 'г',
 //         'i': 'ш', 'o': 'щ', 'p': 'з', '[': 'х', ']': 'ъ', 'a': 'ф', 's': 'ы',
@@ -116,12 +89,15 @@
 //         ';': 'ж', '\'': 'э', 'z': 'я', 'x': 'ч', 'c': 'с', 'v': 'м', 'b': 'и',
 //         'n': 'т', 'm': 'ь', ',': 'б', '.': 'ю', '/': '.',
 //     };
-//     return str.replace(/[A-z/,.;'\]\[]/g, function(x: any) {
+//     const regexp = new RegExp('[A-z/,.;\'\\]\\[]', 'g');
+//     return str.replace(regexp, function(x: string) {
 //         return x === x.toLowerCase() ? associativeArray[x] : associativeArray[x.toLowerCase()].toUpperCase();
 //     });
 // }
-
 </script>
 
-
-
+<style>
+  .home {
+    margin-left: 1%;
+  }
+</style>
