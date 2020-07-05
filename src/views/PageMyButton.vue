@@ -71,6 +71,8 @@
     </div>
     <vue-markdown>## Props</vue-markdown>
     <DataTable :columns="columns" :items="items"></DataTable>
+    <vue-markdown>## Emit</vue-markdown>
+    <DataTable :columns="emitcolumns" :items="emititems"></DataTable>
   </div>
 </template>
 
@@ -115,6 +117,20 @@ export default Vue.extend({
                     props: 'text',
                     type: 'string',
                     description: 'Use for default text in button',
+                }],
+            emitcolumns: [{title: '№', value: '_index'},
+                {title: 'Event', value: 'event'},
+                {title: 'Arg', value: 'arg'},
+                {title: 'Description', value: 'description'}],
+            emititems: [{
+                event: 'close',
+                arg: '',
+                description: 'Modal is closed',
+            },
+                {
+                    event: 'open',
+                    arg: '',
+                    description: 'Modal window open',
                 }],
         };
     },
