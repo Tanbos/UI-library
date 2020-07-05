@@ -60,10 +60,12 @@
       }
     }
   }
-.navbar-box{
-  background-color: honeydew;
-  padding: 0 5px;
-}
+
+  .navbar-box {
+    background-color: honeydew;
+    padding: 0 5px;
+  }
+
   .navbar-nav {
     display: flex;
     flex-direction: column;
@@ -96,6 +98,7 @@
   @media screen and (max-width: 400px) {
     .navbar-nav {
       flex-direction: row;
+
       li {
         margin: 0 10px;
         list-style: none;
@@ -108,9 +111,9 @@
   }
 </style>
 <script lang="ts">
-import Navbar from '@/components/Navbar.vue';
+    import Navbar from '@/components/Navbar.vue';
 
-export default {
-    components: {Navbar},
-};
+    export default {
+        components: {Navbar},
+    };
 </script>
