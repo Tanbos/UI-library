@@ -14,13 +14,13 @@
       Note that images will still be responsive and automatically grow or shrink to fit within the width of its parent
       container.
     </div>
-<div class="example">
-    <Carousel :arrayUrl='["https://loremflickr.com/420/340?random=1",
+    <div class="example">
+      <Carousel :arrayUrl='["https://loremflickr.com/420/340?random=1",
       "https://loremflickr.com/420/340?random=2",
       "https://loremflickr.com/420/340?random=3", "https://loremflickr.com/420/340?random=4",
       "https://loremflickr.com/420/340?random=5", "https://loremflickr.com/420/340?random=6"]'></Carousel>
 
-  </div>
+    </div>
     <vue-markdown class="mblockquote">
       ```
       &lt;Carousel :arrayUrl='["https://loremflickr.com/420/340?random=1",
@@ -96,6 +96,7 @@
   .example {
     margin: 10px auto;
   }
+
   @media screen and (max-width: 400px) {
     .example {
       margin: 10px 0;
