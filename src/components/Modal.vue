@@ -13,7 +13,9 @@
           <slot></slot> <!--  slot for text modal window-->
         </div>
         <div class="footer">
-          <button class="modal-close " @click="close">Ok</button>
+          <button class="modal-close " @click="close">
+            <slot name="footer">Ok</slot>
+          </button>
         </div>
       </div>
     </div>
@@ -21,26 +23,26 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+    import Vue from 'vue';
 
-export default Vue.extend({
-    name: 'Modal',
-    data() {
-        return {
-            visible: false,
-        };
-    },
-    methods: {
-        show(): void {
-            this.visible = true;
-            this.$emit('open');
+    export default Vue.extend({
+        name: 'Modal',
+        data() {
+            return {
+                visible: false,
+            };
         },
-        close(): void {
-            this.visible = false;
-            this.$emit('close');
+        methods: {
+            show(): void {
+                this.visible = true;
+                this.$emit('open');
+            },
+            close(): void {
+                this.visible = false;
+                this.$emit('close');
+            },
         },
-    },
-});
+    });
 </script>
 
 <style lang="less">
