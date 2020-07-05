@@ -1,35 +1,42 @@
 <template>
-  <button class="btn" :class="[color, size]" @click="clickButton">{{text}}</button>
+  <button class="my-btn" :class="[color, size]" @click="clickButton">
+    <slot>
+      {{text}}
+    </slot>
+  </button>
 </template>
 
-<script>
-  export default {
-    name: "MyButton",
+<script lang="ts">
+import Vue from 'vue';
+
+type Color = 'warning' | 'success' | 'danger' | 'info' | 'primary' | 'red' | 'green' | 'yellow' | 'blue';
+type Size = 'small' | 'medium' | 'large';
+
+export default Vue.extend({
+    name: 'MyButton',
     props: {
-      size: {
-        type: String,
-        defaults: "medium"
-      },
-      color: "",
-      text: "",
+        size: {
+            type: String as () => Size,
+            default: 'medium',
+        },
+        color: {type: String as () => Color},
+        text: String,
     },
-
     methods: {
-      clickButton: function (e) {
-        this.$emit('click', e.target);
-      },
-    }
-  }
-
+        clickButton() {
+            this.$emit('click');
+        },
+    },
+});
 </script>
-
 
 <style lang="less">
   @color-warning: #ffc107;
   @color-success: #28a745;
   @color-danger: #dc3545;
   @color-info: #17a2b8;
-  .btn {
+  @color-primary: #007bff;
+  .my-btn {
     display: inline-block;
     font-family: Acme, sans-serif;
     font-size: 1rem;
@@ -51,15 +58,15 @@
     }
   }
 
-  .warning {
+  .warning, .yellow {
     background-color: @color-warning;
   }
 
-  .success {
+  .success, .green {
     background-color: @color-success;
   }
 
-  .danger {
+  .danger, .red {
     background-color: @color-danger;
   }
 
@@ -67,22 +74,26 @@
     background-color: @color-info;
   }
 
+  .primary, .blue {
+    background-color: @color-primary;
+  }
+
   .large {
-    font-size: 2rem;
+    font-size: 3rem;
     line-height: 1.5;
     border-radius: .5rem;
     padding: 1rem 2rem;
     min-height: 50px;
-    min-width: 100px;
+    min-width: 150px;
   }
 
   .medium {
     font-size: 1.5rem;
     line-height: 1.5;
     border-radius: .5rem;
-    padding: 1rem 1rem;
-    min-height: 30px;
-    min-width: 50px;
+    padding: 0.5rem 1rem;
+    min-height: 40px;
+    min-width: 100px;
   }
 
   .small {
