@@ -7,7 +7,7 @@
     <div class="modal-bg-dark" v-if="visible"> /* add blackout background for modal window */
       <div class="modal" v-if="visible">
         <div class="right">
-          <button class="modal-close close-button" @click="close">X</button>
+          <button class="modal-close my-close-button" @click="close">X</button>
         </div>
         <div class="text-modal">
           <slot></slot> <!--  slot for text modal window-->
@@ -53,7 +53,7 @@ export default Vue.extend({
     padding: 5px;
   }
 
-  .close-button {
+  .my-close-button {
     padding: 0;
     width: 20px;
   }
