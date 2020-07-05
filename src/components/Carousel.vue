@@ -8,7 +8,7 @@
       </button>
     </div>
     <div class="carousel">
-      <div class="carouselSlider" style="width: 1680px;" :style="countShift">
+      <div class="carouselSlider" :style="countShift">
         <div class="carouselPhoto">
           <img v-for="url in arrayUrl"
                :src="url">
@@ -26,17 +26,18 @@
 </template>
 
 <script lang="ts">
-const width = 420;
 import Vue from 'vue';
+const width = 420;
+type  ICarouselConfig = string[];
 
 export default Vue.extend({
     name: 'Carousel',
     props: {
-        arrayUrl: Array,
+        arrayUrl: Array as () => ICarouselConfig,
     },
     computed: {
         countShift(): any {
-            return {'margin-left': -width * this.counterImage + 'px'};
+            return {'margin-left': -width * this.counterImage + 'px', 'width': this.arrayUrl.length * width + 'px'};
         },
         isNotStart(): boolean {
             return this.counterImage !== 0;
@@ -46,22 +47,15 @@ export default Vue.extend({
         },
     },
     data() {
-
         return {
             counterImage: 0,
-            lengthArray: {
-                type: Number,
-                default: 0,
-            },
-            shiftCarousel: {
-                type: Number,
-                default: 0,
-            },
+            lengthArray: 0,
+            shiftCarousel: 0,
         };
     },
     methods: {
-        mychangenumber(value: number): number {
-            return this.counterImage = this.counterImage + value;
+        mychangenumber(value: number): void {
+            this.counterImage = this.counterImage + value;
         },
     },
 });
