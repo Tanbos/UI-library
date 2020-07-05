@@ -6,21 +6,25 @@
 
 </template>
 
-<script>
-  export default {
-    name: "Column",
-    data() {
-      return {
-        param: "column-" + this.cols,
-      }
-    },
-    props: {
-      cols: {
-        defaults: "1",
-      },
-    },
+<script lang="ts">
+import Vue from 'vue';
+type Columns = string | number;
 
-  }
+export default Vue.extend({
+  name: 'Column',
+  data() {
+    return {
+      param: 'column-' + this.cols,
+    };
+  },
+  props: {
+    cols: {
+      type: String as () => Columns,
+      default: 1,
+    },
+  },
+
+});
 </script>
 
 <style lang="less">
@@ -29,7 +33,6 @@
     background-color: @background;
     margin: 20px 0 0 0;
     color: white;
-    text-size: 30px;
   }
 
   @column: column;
@@ -49,7 +52,6 @@
       .@{column}-@{i} {
         grid-column-end: span 12;
         min-height: 40px;
-        background-color: @background;
       }
       .make-grid-mini(@i + 1);
     }
