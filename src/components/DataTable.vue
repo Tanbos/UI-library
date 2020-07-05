@@ -14,7 +14,6 @@
             'fa-sort-up': sortColumns[col.value] === 1,
             'fa-sort':sortColumns[col.value] === 0,
             'fa-sort-down': sortColumns[col.value] === -1}">
-
           </button>
         </th>
       </tr>
@@ -38,7 +37,6 @@
 
 <script lang="ts">
 import Vue from 'vue';
-
 
 interface SearchConfig {
     fields: string[];
@@ -75,7 +73,7 @@ export default Vue.extend({
             const filtered = this.items.filter((el: any) => {
                 let isSearch: boolean;
                 isSearch = false;
-                this.search.fields.forEach((field: any) => {
+                if (this.search) { this.search.fields.forEach((field: any) => {
                     const nFilters = this.search.filters.length;
                     for (let i = 0; i < nFilters; i++) {
                         const valueS = this.valueSearch;
@@ -83,7 +81,7 @@ export default Vue.extend({
                             isSearch = true;
                         }
                     }
-                });
+                }); } else { isSearch = true; }
                 return isSearch;
             });
             let actualColumn: any;
@@ -166,4 +164,5 @@ export default Vue.extend({
   input[type="text"]::-webkit-input-placeholder { /* for Chrome */
     color: #ffd595;
   }
+
 </style>
