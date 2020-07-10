@@ -65,24 +65,18 @@ export default Vue.extend({
     },
     data() {
         return {
-            sortColumns: {
-                name: 0,
-                surname: 0,
-                age: 0,
-            } as IsortColumns,
+            sortColumns: {} as IsortColumns,
             valueSearch: '',
             sortedDown: 'fa-sort-down',
             sortedUp: 'fa-sort-up',
             sortedNot: 'fa-sort',
+            isSearch:  this.search != null,
         };
     },
 
     computed: {
-        isSearch(): boolean {
-            return this.search != null;
-        },
         actualItems(): ITableItem {
-            const filtered = this.items.filter((el: any) => {
+            const filtered = this.items.filter((el: {[key: string]: string}) => {
                 let isSearch: boolean;
                 isSearch = false;
                 if (this.search) {
