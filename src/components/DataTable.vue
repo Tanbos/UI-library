@@ -10,7 +10,7 @@
             :key="col.title"
             :title="col.title">
           {{col.title}}
-          <button v-if="col.sortable==true" @click="sortData(col)" class="fas" :class="{
+          <button v-if="col.sortable===true" @click="sortData(col)" class="fas" :class="{
             'fa-sort-up': sortColumns[col.value] === 1,
             'fa-sort':sortColumns[col.value] === 0,
             'fa-sort-down': sortColumns[col.value] === -1}">
@@ -36,104 +36,116 @@
 </template>
 
 <script lang="ts">
-    import Vue from 'vue';
+import Vue from 'vue';
+interface IColumnConfig {
+    title: string;
+    value: string;
+    type?: string;
+    editable?: boolean;
+    sortable?: boolean;
+}
 
-    interface SearchConfig {
-        fields: string[];
-        filters: Array<(v: string) => string>;
-    }
+type ITableItem = Array<{}>;
 
-    export default Vue.extend({
+interface SearchConfig {
+    fields: string[];
+    filters: Array<(v: string) => string>;
+}
+interface IsortColumns {
+    [col: string]: number;
+}
 
-        name: 'DataTable',
-        props: {
-            items: Array,
-            columns: Array,
-            search: {type: Object as () => SearchConfig},
+export default Vue.extend({
+
+    name: 'DataTable',
+    props: {
+        items: {type: Object as () => ITableItem},
+        columns: {type: Object as () => IColumnConfig},
+        search: {type: Object as () => SearchConfig},
+    },
+    data() {
+        return {
+            sortColumns: {
+                name: 0,
+                surname: 0,
+                age: 0,
+            } as IsortColumns,
+            valueSearch: '',
+            sortedDown: 'fa-sort-down',
+            sortedUp: 'fa-sort-up',
+            sortedNot: 'fa-sort',
+        };
+    },
+
+    computed: {
+        isSearch(): boolean {
+            return this.search != null;
         },
-        data() {
-            return {
-                sortColumns: {
-                    name: 0,
-                    surname: 0,
-                    age: 0,
-                } as { [colTitle: string]: number },
-                valueSearch: '',
-                sortedDown: 'fa-sort-down',
-                sortedUp: 'fa-sort-up',
-                sortedNot: 'fa-sort',
-            };
-        },
-
-        computed: {
-            isSearch(): boolean {
-                return this.search != null;
-            },
-            actualItems(): any {
-                const filtered = this.items.filter((el: any) => {
-                    let isSearch: boolean;
-                    isSearch = false;
-                    if (this.search) {
-                        this.search.fields.forEach((field: any) => {
-                            const nFilters = this.search.filters.length;
-                            for (let i = 0; i < nFilters; i++) {
-                                const valueS = this.valueSearch;
-                                if (!isSearch &&
-                                    this.search.filters[i](el[field]).includes(this.search.filters[i](valueS))) {
-                                    isSearch = true;
-                                }
+        actualItems(): ITableItem {
+            const filtered = this.items.filter((el: any) => {
+                let isSearch: boolean;
+                isSearch = false;
+                if (this.search) {
+                    this.search.fields.forEach((field: string) => {
+                        const nFilters = this.search.filters.length;
+                        for (let i = 0; i < nFilters; i++) {
+                            const valueS = this.valueSearch;
+                            if (!isSearch &&
+                                this.search.filters[i](el[field]).includes(this.search.filters[i](valueS))) {
+                                isSearch = true;
                             }
-                        });
-                    } else {
-                        isSearch = true;
-                    }
-                    return isSearch;
-                });
-                let actualColumn: any;
-                for (const temp in this.sortColumns) {
-                    if (this.sortColumns[temp] !== 0) {
-                        actualColumn = temp;
-                    }
-                }
-
-                if (actualColumn) {
-                    const sorted = filtered.sort((a: any, b: any) => {
-                            return (typeof a[actualColumn] === 'number')
-                                ? this.sortColumns[actualColumn] * (a[actualColumn] - b[actualColumn])
-                                : this.sortColumns[actualColumn] * (a[actualColumn].localeCompare(b[actualColumn]));
-                        },
-                    );
-                    return sorted;
+                        }
+                    });
                 } else {
-                    return filtered;
+                    isSearch = true;
                 }
-            },
-        },
+                return isSearch;
+            });
+            let actualColumn = '';
+            for (const temp in this.sortColumns) {
+                if (this.sortColumns[temp] !== 0) {
+                    actualColumn = temp;
+                }
+            }
 
-        methods: {
-
-            sortData(col: any): any {
-                let newValue = this.sortColumns[col.value];
-                for (const temp in this.sortColumns) {
-                    if (!this.sortColumns.hasOwnProperty(temp)) {
-                        continue;
-                    }
-                    this.$set(this.sortColumns, temp, 0);
-                }
-                switch (newValue) {
-                    case 0:
-                        newValue = 1;
-                        break;
-                    case 1:
-                        newValue = -1;
-                        break;
-                    default :
-                        newValue = 0;
-                }
-                this.$set(this.sortColumns, col.value, newValue);
-            },
+            if (actualColumn !== '') {
+                const sorted = filtered.sort((a: any, b: any) => {
+                        return (typeof a[actualColumn] === 'number')
+                            ? this.sortColumns[actualColumn] * (a[actualColumn] - b[actualColumn])
+                            : this.sortColumns[actualColumn] * (a[actualColumn].localeCompare(b[actualColumn]));
+                    },
+                );
+                return sorted;
+            } else {
+                return filtered;
+            }
         },
-    });
+    },
+
+    methods: {
+
+        sortData(col: IColumnConfig): void {
+            let newValue = this.sortColumns[col.value];
+            for (const temp in this.sortColumns) {
+                if (!this.sortColumns.hasOwnProperty(temp)) {
+                    continue;
+                }
+                this.$set(this.sortColumns, temp, 0);
+            }
+            switch (newValue) {
+                case 0:
+                    newValue = 1;
+                    break;
+                case 1:
+                    newValue = -1;
+                    break;
+                default :
+                    newValue = 0;
+            }
+            this.$set(this.sortColumns, col.value, newValue);
+        },
+    },
+});
 </script>
 
 <style>
