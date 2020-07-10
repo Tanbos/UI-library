@@ -168,6 +168,7 @@ export default Vue.extend({
   }
 
   .pagemybutton {
+    overflow: scroll;
     margin: 2%;
   }
 
